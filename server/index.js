@@ -3,6 +3,10 @@ const app = express();
 const cors = require("cors");
 const port = 3042;
 
+const secp = require("ethereum-cryptography/secp256k1-compat");
+const { keccak256 } = require("ethereum-cryptography/keccak");
+const { toHex, hexToBytes } = require("ethereum-cryptography/utils");
+
 app.use(cors());
 app.use(express.json());
 
@@ -23,17 +27,20 @@ app.post("/send", (req, res) => {
   // Recover the public address from the signature 
   // set the Sender to the one who signed the signature
 
-  const { sender, recipient, amount } = req.body;
+  const { signature, recid, msgHash, amount, recipient } = req.body;
 
-  setInitialBalance(sender);
+  const senderPublicKey = secp.ecdsaRecover(hexToBytes(signature), recid, hexToBytes(msgHash)); // retrieve the address from the signature (public key)
+  const senderAddress = toHex(keccak256(senderPublicKey.slice(1)).slice(-20));
+
+  setInitialBalance(senderAddress);
   setInitialBalance(recipient);
 
-  if (balances[sender] < amount) {
+  if (balances[senderAddress] < amount) {
     res.status(400).send({ message: "Not enough funds!" });
   } else {
-    balances[sender] -= amount;
+    balances[senderAddress] -= amount;
     balances[recipient] += amount;
-    res.send({ balance: balances[sender] });
+    res.send({ balance: balances[senderAddress] });
   }
 });
 
