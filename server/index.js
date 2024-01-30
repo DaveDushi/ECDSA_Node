@@ -6,6 +6,7 @@ const port = 3042;
 const secp = require("ethereum-cryptography/secp256k1-compat");
 const { keccak256 } = require("ethereum-cryptography/keccak");
 const { toHex, hexToBytes } = require("ethereum-cryptography/utils");
+const { getAddress } = require("./scripts/utils")
 
 app.use(cors());
 app.use(express.json());
@@ -30,7 +31,7 @@ app.post("/send", (req, res) => {
   const { signature, recid, msgHash, amount, recipient } = req.body;
 
   const senderPublicKey = secp.ecdsaRecover(hexToBytes(signature), recid, hexToBytes(msgHash)); // retrieve the address from the signature (public key)
-  const senderAddress = toHex(keccak256(senderPublicKey.slice(1)).slice(-20));
+  const senderAddress = getAddress(senderPublicKey);
 
   setInitialBalance(senderAddress);
   setInitialBalance(recipient);

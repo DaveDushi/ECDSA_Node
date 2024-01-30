@@ -22,7 +22,9 @@ function Transfer({ address, setBalance, privateKey }) {
 
     const msg = `${address} sent ${sendAmount} coins to ${recipient}`;
     const msgHash = keccak256(utf8ToBytes(msg));
+    console.log('msgHash:', toHex(msgHash));
     const { signature, recid } = secp.ecdsaSign(msgHash, hexToBytes(privateKey));
+    console.log("signature: ", toHex(signature));
 
     try {
       const {
