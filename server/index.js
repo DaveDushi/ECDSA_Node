@@ -29,7 +29,9 @@ app.post("/send", (req, res) => {
   // set the Sender to the one who signed the signature
 
   const { signature, recid, msgHash, amount, recipient } = req.body;
-
+  console.log("signature: ", signature);
+  console.log("recid: ", recid);
+  console.log("msgHash: ", msgHash);
   const senderPublicKey = secp.ecdsaRecover(hexToBytes(signature), recid, hexToBytes(msgHash)); // retrieve the address from the signature (public key)
   const senderAddress = getAddress(senderPublicKey);
 

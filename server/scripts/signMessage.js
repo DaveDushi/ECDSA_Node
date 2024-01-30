@@ -7,20 +7,21 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+// Prompt the user for their private key
 rl.question('Enter your Private Key: ', (privateKey) => {
-    rl.question('Enter the Message Hash: ', (msgHash) => {
-      // Process the private key and message
-        const { signature, recid } = secp.ecdsaSign(hexToBytes(msgHash), hexToBytes(privateKey));
-        const signatureHex = toHex(signature);
+  // Prompt the user for the message hash they want to sign
+  rl.question('Enter the Message Hash: ', (msgHash) => {
+    // Sign the message using the provided private key and message hash
+    const { signature, recid } = secp.ecdsaSign(hexToBytes(msgHash), hexToBytes(privateKey));
+    
+    // Convert the signature to a hexadecimal string
+    const signatureHex = toHex(signature);
 
-        console.log("Signature:", signatureHex);
-        console.log("Recovery Id:", recid)
+    // Display the signature and recovery id
+    console.log("Signature:", signatureHex);
+    console.log("Recovery Id:", recid);
 
-      
-      // Close the readline interface
-      rl.close();
-    });
+    // Close the readline interface
+    rl.close();
   });
-
-
-
+});
