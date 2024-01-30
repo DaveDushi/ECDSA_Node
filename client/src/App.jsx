@@ -41,6 +41,7 @@ function App() {
         setBalance={setBalance} 
         sendAmount = {sendAmount}
         recipient = {recipient}
+        address = {address}
         />
     </div>
   );

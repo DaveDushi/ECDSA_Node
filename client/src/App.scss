@@ -32,11 +32,21 @@ label {
   padding: 40px;
 
   label {
-    margin: 10px 0;
+    font-size: medium;
+    margin: 10px;
+  }
+
+  #recid {
+    margin-right: auto;
   }
 
   .button {
-    margin-top: 10px;
+    margin: 10px auto;
+    
+  }
+
+  h1 {
+    text-align: center;
   }
 }
 

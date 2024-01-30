@@ -24,27 +24,30 @@ app.get("/balance/:address", (req, res) => {
 });
 
 app.post("/send", (req, res) => {
-  // TODO: get a signature from the client-side application
-  // Recover the public address from the signature 
-  // set the Sender to the one who signed the signature
 
-  const { signature, recid, msgHash, amount, recipient } = req.body;
-  console.log("signature: ", signature);
-  console.log("recid: ", recid);
-  console.log("msgHash: ", msgHash);
-  const senderPublicKey = secp.ecdsaRecover(hexToBytes(signature), recid, hexToBytes(msgHash)); // retrieve the address from the signature (public key)
-  const senderAddress = getAddress(senderPublicKey);
+  const { signature, recid, msgHash, amount, recipient, address } = req.body;
 
-  setInitialBalance(senderAddress);
-  setInitialBalance(recipient);
+  // retrieve the address from the signature
+  const signaturePublicKey = secp.ecdsaRecover(hexToBytes(signature), recid, hexToBytes(msgHash)); 
+  const signatureAddress = getAddress(signaturePublicKey);
 
-  if (balances[senderAddress] < amount) {
-    res.status(400).send({ message: "Not enough funds!" });
+  // check if the signature address matches the senders address 
+  if (address === signatureAddress) {
+    setInitialBalance(signatureAddress);
+    setInitialBalance(recipient);
+
+    if (balances[signatureAddress] < amount) {
+      res.status(400).send({ message: "Not enough funds!" });
+    } else {
+      balances[signatureAddress] -= amount;
+      balances[recipient] += amount;
+      res.send({ balance: balances[signatureAddress] });
+    }
   } else {
-    balances[senderAddress] -= amount;
-    balances[recipient] += amount;
-    res.send({ balance: balances[senderAddress] });
+    res.status(400).send({ message: "Access Denied!" });
   }
+
+
 });
 
 app.listen(port, () => {

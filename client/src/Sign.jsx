@@ -3,7 +3,7 @@ import server from "./server";
 import { keccak256 } from "ethereum-cryptography/keccak";
 import { utf8ToBytes, hexToBytes, toHex } from "ethereum-cryptography/utils";
 
-function Sign({signature, setSignature, recid, setRecid, msg, setBalance, sendAmount, recipient}) {
+function Sign({signature, setSignature, recid, setRecid, msg, setBalance, sendAmount, recipient, address}) {
     const [msgHashBytes, setMsgHashBytes] = useState("");
 
     const setValue = (setter) => (evt) => setter(evt.target.value);
@@ -25,10 +25,11 @@ function Sign({signature, setSignature, recid, setRecid, msg, setBalance, sendAm
             data: { balance },
           } = await server.post(`send`, {
             signature,
-            recid,
+            recid: parseInt(recid),
             msgHash: msgHashBytes,
             amount: parseInt(sendAmount),
             recipient,
+            address
           });
           setBalance(balance);
         } catch (ex) {
@@ -50,7 +51,7 @@ function Sign({signature, setSignature, recid, setRecid, msg, setBalance, sendAm
           </label>
           <label>
             Recovery ID
-            <input placeholder="Type in your recovery ID" value={recid} onChange={setValue(setRecid)}></input>
+            <input id="recid" placeholder="Type in your recovery ID" value={recid} onChange={setValue(setRecid)} type="number"></input>
           </label>
 
           <input type="submit" className="button" value="Sign & Transfer" />
