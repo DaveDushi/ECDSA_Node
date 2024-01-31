@@ -32,17 +32,21 @@ function App() {
       setRecipient = {setRecipient}
        />
 
-      <Sign 
+      {sendAmount && recipient && address ? <Sign 
         signature = {signature}
         setSignature = {setSignature}
         recid = {recid}
         setRecid = {setRecid}
         msg = {msg}
         setBalance={setBalance} 
+        setMsg = {setMsg}
         sendAmount = {sendAmount}
+        setSendAmount = {setSendAmount}
         recipient = {recipient}
+        setRecipient = {setRecipient}
         address = {address}
-        />
+        /> : null}
+      
     </div>
   );
 }

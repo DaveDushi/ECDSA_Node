@@ -4,7 +4,7 @@ import { keccak256 } from "ethereum-cryptography/keccak";
 import { utf8ToBytes, toHex } from "ethereum-cryptography/utils";
 
 // Sign component for managing signatures and transfers
-function Sign({ signature, setSignature, recid, setRecid, msg, setBalance, sendAmount, recipient, address }) {
+function Sign({ signature, setSignature, recid, setRecid, msg, setBalance, sendAmount, recipient, address, setRecipient, setMsg, setSendAmount }) {
   // State for storing the hexadecimal representation of the message hash
   const [msgHashBytes, setMsgHashBytes] = useState("");
 
@@ -20,26 +20,33 @@ function Sign({ signature, setSignature, recid, setRecid, msg, setBalance, sendA
   // Function to handle the transfer upon form submission
   async function transfer(evt) {
     evt.preventDefault();
-    console.log("signature: ", signature);
-    console.log("recid: ", recid);
-    console.log("msgHash: ", msgHashBytes);
+    if(!sendAmount || !recipient || !address || !signature) {
+      alert("Enter the all the values");
+    } else {
+      try {
+        // Make a server request to initiate the transfer
+        const {
+          data: { balance },
+        } = await server.post(`send`, {
+          signature,
+          recid: parseInt(recid),
+          msgHash: msgHashBytes,
+          amount: parseInt(sendAmount),
+          recipient,
+          address,
+        });
+        setBalance(balance);
 
-    try {
-      // Make a server request to initiate the transfer
-      const {
-        data: { balance },
-      } = await server.post(`send`, {
-        signature,
-        recid: parseInt(recid),
-        msgHash: msgHashBytes,
-        amount: parseInt(sendAmount),
-        recipient,
-        address,
-      });
-      setBalance(balance);
-    } catch (ex) {
-      // Handle errors and display an alert with the error message
-      alert(ex.response.data.message);
+        // reset the values
+        setSignature("");
+        setRecipient("");
+        setSendAmount("");
+        setRecid(0);
+
+      } catch (ex) {
+        // Handle errors and display an alert with the error message
+        alert(ex.response.data.message);
+      }
     }
   }
 
