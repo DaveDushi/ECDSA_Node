@@ -17,7 +17,7 @@ rl.question('Enter your Private Key: ', (privateKey) => {
     // Convert the signature to a hexadecimal string
     const signatureHex = toHex(signature);
 
-    // Display the signature and recovery id
+    // Display the signature and recovery id 
     console.log("Signature:", signatureHex);
     console.log("Recovery Id:", recid);
 

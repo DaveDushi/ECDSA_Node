@@ -8,4 +8,4 @@ function getAddress(publicKey) {
 
 module.exports = {
     getAddress
-};
+}; 

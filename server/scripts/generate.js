@@ -1,18 +1,14 @@
 const secp = require("ethereum-cryptography/secp256k1-compat");
 const { toHex } = require("ethereum-cryptography/utils");
-const { keccak256 } = require("ethereum-cryptography/keccak");
-const { getAddress } = require("./utils")
+const { getAddress } = require("./utils");
 
-
+// Generate a random private key for an Ethereum account
 const privateKey = secp.createPrivateKeySync();
-
-console.log('Private Key:', toHex(privateKey));
-
+// Derive the corresponding public key from the generated private key
 const publicKey = secp.publicKeyCreate(privateKey);
-
-console.log('Public Key:', toHex(publicKey));
-
+// Derive the Ethereum address from the public key
 const address = getAddress(publicKey);
 
+console.log('Private Key:', toHex(privateKey));
+console.log('Public Key:', toHex(publicKey));
 console.log('Address:', address);
-

@@ -1,40 +1,38 @@
-import { useState, useEffect } from "react";
-import server from "./server";
-import * as secp from "ethereum-cryptography/secp256k1-compat";
-import { keccak256 } from "ethereum-cryptography/keccak";
-import { utf8ToBytes, hexToBytes, toHex } from "ethereum-cryptography/utils";
+import { useEffect, useMemo } from "react";
 
-function Transfer({ address, msg, setMsg, sendAmount, setSendAmount, recipient, setRecipient }) {
+// Transfer component for handling transaction details
+function Transfer({ address, setMsg, sendAmount, setSendAmount, recipient, setRecipient }) {
   
-  const setValue = (setter) => (evt) => setter(evt.target.value);
+  // Calculate msg using useMemo to optimize performance
+  const calculatedMsg = useMemo(() => `${address.slice(0,10)}... sent ${sendAmount} coins to ${recipient.slice(0,10)}...`, [sendAmount, recipient, address]);
 
+  // Effect to update msg whenever sendAmount or recipient changes
   useEffect(() => {
-    // Calculate msg whenever sendAmount or recipient changes
-    const calculatedMsg = `${address} sent ${sendAmount} coins to ${recipient}`;
     setMsg(calculatedMsg);
-  }, [sendAmount, recipient, address]);
-
+  }, [calculatedMsg, setMsg]);
 
   return (
-      <div className="container transfer">
-        <h1>Send Transaction</h1>
-        <label>
+    <div className="container transfer">
+      <h1>Send Transaction</h1>
+
+      <label>
         Send Amount
         <input
           placeholder="1, 2, 3..."
           value={sendAmount}
-          onChange={setValue(setSendAmount)}
+          onChange={(evt) => setSendAmount(evt.target.value)}
         ></input>
       </label>
+
       <label>
-          Recipient
-          <input
-            placeholder="Type an address, for example: 0x2"
-            value={recipient}
-            onChange={setValue(setRecipient)}
-          ></input>
-        </label>
-      </div>
+        Recipient
+        <input
+          placeholder="Type an address, for example: 0x2"
+          value={recipient}
+          onChange={(evt) => setRecipient(evt.target.value)}
+        ></input>
+      </label>
+    </div>
   );
 }
 
