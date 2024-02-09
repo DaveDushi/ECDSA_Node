@@ -1,14 +1,14 @@
 import { useEffect, useMemo } from "react";
 
 // Transfer component for handling transaction details
-function Transfer({ address, setMsg, sendAmount, setSendAmount, recipient, setRecipient }) {
+function Transfer({ address, setMsg, sendAmount, setSendAmount, recipient, setRecipient, nonce }) {
   
   // Calculate msg using useMemo to optimize performance
   const calculatedMsg = useMemo(() => `${address.slice(0,10)}... sent ${sendAmount} coins to ${recipient.slice(0,10)}...`, [sendAmount, recipient, address]);
 
   // Effect to update msg whenever sendAmount or recipient changes
   useEffect(() => {
-    setMsg(calculatedMsg);
+    setMsg(calculatedMsg + nonce);
   }, [calculatedMsg, setMsg]);
 
   return (

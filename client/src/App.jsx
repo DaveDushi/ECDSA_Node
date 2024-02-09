@@ -11,7 +11,8 @@ function App() {
   const [recid, setRecid] = useState(0);
   const [msg, setMsg] = useState("");
   const [sendAmount, setSendAmount] = useState("");
-  const [recipient, setRecipient] = useState(""); 
+  const [recipient, setRecipient] = useState("");
+  const [nonce, setNonce] = useState(0);
 
   return (
     <div className="app">
@@ -30,6 +31,7 @@ function App() {
       setSendAmount = {setSendAmount}
       recipient = {recipient}
       setRecipient = {setRecipient}
+      nonce = {nonce}
        />
 
       {sendAmount && recipient && address ? <Sign 
@@ -45,6 +47,8 @@ function App() {
         recipient = {recipient}
         setRecipient = {setRecipient}
         address = {address}
+        nonce = {nonce}
+        setNonce = {setNonce}
         /> : null}
       
     </div>

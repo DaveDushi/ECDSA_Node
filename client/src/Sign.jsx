@@ -4,7 +4,7 @@ import { keccak256 } from "ethereum-cryptography/keccak";
 import { utf8ToBytes, toHex } from "ethereum-cryptography/utils";
 
 // Sign component for managing signatures and transfers
-function Sign({ signature, setSignature, recid, setRecid, msg, setBalance, sendAmount, recipient, address, setRecipient, setMsg, setSendAmount }) {
+function Sign({ signature, setSignature, recid, setRecid, msg, setBalance, sendAmount, recipient, address, setRecipient, setSendAmount, setNonce, nonce }) {
   // State for storing the hexadecimal representation of the message hash
   const [msgHashBytes, setMsgHashBytes] = useState("");
 
@@ -36,6 +36,7 @@ function Sign({ signature, setSignature, recid, setRecid, msg, setBalance, sendA
           address,
         });
         setBalance(balance);
+        setNonce(++nonce);
 
         // reset the values
         setSignature("");
